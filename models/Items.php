@@ -1,17 +1,14 @@
 <?php
-class Builds extends Phalcon\Mvc\Collection {
+class Items extends Phalcon\Mvc\Collection {
 	protected static $_fieldMap = array(
 		'id'						=> null,
 		'name'					=> null,
-		'class'					=> 'heroClass',
-		'level'					=> null,
-		'hardcore'			=> null,
-		'paragon'				=> null,
-		'actives'				=> null,
-		'passives'			=> null,
-		'_characterId'	=> 'bt-id',
-		'_characterBt'	=> 'bt-tag',
-		'_characterRg'	=> 'bt-srv'
+		'attrs'					=> null,
+		'stats'					=> null,
+		'icon'					=> null,
+		'type'					=> null,
+		'quality'				=> null,
+		'_created'			=> 'created',
 	);
 	
 	public static function json($params) {
