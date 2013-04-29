@@ -29,6 +29,13 @@ class Builds extends Phalcon\Mvc\Collection {
 					$json[$newName?:$idx] = null;
 				}
 			}
+			// Haven't figured out how to add this to the fieldMap yet, someday!
+			if(isset($doc->stats['dps'])) {
+				$json['dps'] = $doc->stats['dps'];
+			}
+			if(isset($doc->stats['ehp'])) {
+				$json['ehp'] = $doc->stats['ehp'];
+			}
 			return $json;
 		}, $data);
 	}
