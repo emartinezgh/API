@@ -24,9 +24,8 @@ $app->get('/api/builds', function($class = false) use($app) {
 			/api/builds?class=monk
 	*/
 	if($class = $app->request->get('class')) {
-		$params['conditions']['class'] = $class;
+		$conditions['class'] = $class;
 	}
-	
 	/*
 		$_GET['actives'] Param
 		
@@ -37,9 +36,8 @@ $app->get('/api/builds', function($class = false) use($app) {
 			/api/builds?actives=blizzard~c
 			/api/builds?actives=blizzard~c|meteor~e
 	*/
-	
 	if($app->request->get('actives') && $actives = explode("|",$app->request->get('actives'))) {
-		$params['condition']['actives'] = array('$all' => $actives);
+		$conditions['actives'] = array('$all' => $actives);
 	}
 	/*
 		Default Sorting Order
@@ -99,10 +97,10 @@ $app->get('/api/builds', function($class = false) use($app) {
 			Skip has to be <= 10000
 	*/
 	if($limit > 100) {
-		return json_encode(['error' => 'The maximum results per request is 100.']);
+		echo json_encode(['error' => 'The maximum results per request is 100.']);
 	}
 	if($skip >= 10000) {
-		return json_encode(['error' => 'The depth of pagination is 100, limiting you to 10,000 results maximum. Please refine your query if you are seeking something specific.']);		
+		echo json_encode(['error' => 'The depth of pagination is 100, limiting you to 10,000 results maximum. Please refine your query if you are seeking something specific.']);		
 	}
 	/*
 		Finally, assemble all of these variables into $params for passage into the ORM
