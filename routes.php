@@ -98,9 +98,11 @@ $app->get('/api/builds', function($class = false) use($app) {
 	*/
 	if($limit > 100) {
 		echo json_encode(['error' => 'The maximum results per request is 100.']);
+		exit;
 	}
 	if($skip >= 10000) {
 		echo json_encode(['error' => 'The depth of pagination is 100, limiting you to 10,000 results maximum. Please refine your query if you are seeking something specific.']);		
+		exit;
 	}
 	/*
 		Finally, assemble all of these variables into $params for passage into the ORM
