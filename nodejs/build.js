@@ -19,7 +19,7 @@ buildSchema.methods.toJSON = function() {
 		'_characterRg': 'bt-srv'
 	};
 	var data = {};
-			obj = this.toObject()
+	obj = this.toObject();
 	if(obj) {
 		Object.keys(fields).forEach(function(k,v) {
 			if(obj[k]) {

@@ -17,6 +17,7 @@ $di->set('collectionManager', function() {
 });
 // Setup a MicroMVC app
 $app = new Phalcon\Mvc\Micro();
+// Setup the 404 Error Response
 $app->notFound(function () use ($app) {
     $app->response->setStatusCode(404, "Not Found")->sendHeaders();
     echo json_encode(['error' => 'Invalid Request']);

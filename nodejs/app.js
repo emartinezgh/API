@@ -11,6 +11,6 @@ app.configure(function(){
 });
  
 var api = require('./api.js');
-app.get('/api/builds', api.get);
+app.get('/builds', api.get);
  
-app.listen(3000);
+app.listen(80);

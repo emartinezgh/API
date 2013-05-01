@@ -1,5 +1,5 @@
 <?php
-$app->get('/api/builds', function($class = false) use($app) {
+$app->get('/builds', function($class = false) use($app) {
 	/*
 		Default Query Params
 		
