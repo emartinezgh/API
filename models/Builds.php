@@ -1,17 +1,20 @@
 <?php
 class Builds extends Phalcon\Mvc\Collection {
+	// The allowed fields in the JSON function
+	// 		key = name of the field
+	//		value = what to rename the field to, null = no rename
 	protected static $_fieldMap = array(
-		'id'						=> null,
-		'name'					=> null,
-		'class'					=> 'heroClass',
-		'level'					=> null,
-		'hardcore'			=> null,
-		'paragon'				=> null,
-		'actives'				=> null,
-		'passives'			=> null,
-		'_characterId'	=> 'bt-id',
-		'_characterBt'	=> 'bt-tag',
-		'_characterRg'	=> 'bt-srv'
+		'id' => null,
+		'name' => null,
+		'class' => 'heroClass',
+		'level' => null,
+		'hardcore' => null,
+		'paragon' => null,
+		'actives' => null,
+		'passives' => null,
+		'_characterId' => 'bt-id',
+		'_characterBt' => 'bt-tag',
+		'_characterRg' => 'bt-srv'
 	);
 	
 	public static function json($params) {
@@ -39,4 +42,5 @@ class Builds extends Phalcon\Mvc\Collection {
 			return $json;
 		}, $data);
 	}
+	
 }

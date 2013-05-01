@@ -110,9 +110,13 @@ $app->get('/builds', function($class = false) use($app) {
 	$params = array(
 		'conditions' => $conditions,
 		'sort' => $sort,
-		'limit' => $limit,
+		'limit' => 10,
 		'skip' => $skip,
 	);
+	if($app->request->get('explain')) {
+		// Do the explain here
+		// var_dump(Builds::explain($params)); exit;
+	}
 	/*
 		Execute the Query and return JSON
 	*/
