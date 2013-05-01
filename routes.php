@@ -1,7 +1,7 @@
 <?php
-$app->get('/builds', function($class = false) use($app) {
+$app->get('/builds', function() use($app) {
 	/*
-		Default Query Params
+		Default Query
 		
 		The $conditions variable is the query that is being passed to MongoDB
 
@@ -58,10 +58,10 @@ $app->get('/builds', function($class = false) use($app) {
 	if($sortBy = $app->request->get('sort')) {
 		switch($sortBy) {
 			case "dps":
-				$params['sort']['stats.dps'] = -1;
+				$sort['stats.dps'] = -1;
 				break;
 			case "ehp":
-				$params['sort']['stats.ehp'] = -1;
+				$sort['stats.ehp'] = -1;
 				break;
 		}
 	}
@@ -86,7 +86,7 @@ $app->get('/builds', function($class = false) use($app) {
 	*/
 	$page = $app->request->get('page', 'int', 1);
 	/*
-		Determine the Skip Value based on the Limit and Page params
+		Determine the Skip Value based on the Limit and Page
 	*/
 	$skip = $limit * ($page - 1);
 	/*
@@ -114,8 +114,8 @@ $app->get('/builds', function($class = false) use($app) {
 		'skip' => $skip,
 	);
 	if($app->request->get('explain')) {
-		// Do the explain here
-		// var_dump(Builds::explain($params)); exit;
+		// Do the explain here, for now, we'll just var_dump the query params
+		echo json_encode($params); exit;
 	}
 	/*
 		Execute the Query and return JSON
