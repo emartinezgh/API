@@ -107,18 +107,12 @@ $app->get('/builds', function() use($app) {
 			Skip has to be <= 10000
 	*/
 	if($limit > 50) {
-		echo json_encode(['error' => 'The maximum results per request is 50.']);
+		echo jsonp_encode(['error' => 'The maximum results per request is 50.'], $app);
 		exit;
 	}
 	if($skip >= 10000) {
-		echo json_encode(['error' => 'The depth of pagination is 100, limiting you to 10,000 results maximum. Please refine your query if you are seeking something specific.']);		
+		echo jsonp_encode(['error' => 'The depth of pagination is 100, limiting you to 10,000 results maximum. Please refine your query if you are seeking something specific.'], $app);		
 		exit;
-	}
-	/*
-		Finally, assemble all of these variables into $params for passage into the ORM
-	*/
-	if($app->request->get('explain')) {
-		// Do the explain here, for now, we'll just var_dump the query params
 	}
 	/*
 		Execute the Query
@@ -128,12 +122,23 @@ $app->get('/builds', function() use($app) {
 		Throw an error if we can't find any matches
 	*/
 	if(!$data) {
-		echo json_encode(array('error' => 'Invalid Request')); exit;
+		echo jsonp_encode(array('error' => 'Invalid Request'), $app); exit;
 	}
+	/*
+		If the request has the explain parameter, dump out the info about the query and exit
+	*/
+	if($app->request->get('explain')) {
+		echo jsonp_encode(array(
+			'info' => $data->getInnerIterator()->info(),
+			'explain' => $data->getInnerIterator()->explain()
+		), $app);
+		exit;
+	}
+	
 	/*
 		Render the data as JSON 
 	*/
-	echo json_encode($data->json());
+	echo jsonp_encode($data->json(), $app);
 });
 /*
 	
@@ -153,10 +158,10 @@ $app->get('/builds/{id}', function($id) use($app) {
 		Throw an error if we can't find the Build
 	*/
 	if(!$data) {
-		echo json_encode(array('error' => 'Invalid Request')); exit;
+		echo jsonp_encode(array('error' => 'Invalid Request'), $app); exit;
 	}
 	/*
 		Render the data as JSON 
 	*/
-	echo json_encode($data->json());
+	echo jsonp_encode($data->json(), $app);
 });

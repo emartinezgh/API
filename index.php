@@ -3,6 +3,9 @@
 	Setup a MicroMVC app
 */
 $app = new Phalcon\Mvc\Micro();
+
+require_once("jsonp.php");
+
 /*
 	Setup the 404 Error Response for all non-found routes
 */
