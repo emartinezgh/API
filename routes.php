@@ -1,4 +1,14 @@
 <?php
+/*
+	
+	Builds API Route (http://api.d3up.com/builds)
+	
+	This route is used for retrieving multiple builds based on
+	query parameters passed in.
+	
+	All query parameters are passed in via GET (?var1=1&var2=2 etc)
+	
+*/
 $app->get('/builds', function() use($app) {
 	/*
 		Default Query
@@ -121,4 +131,27 @@ $app->get('/builds', function() use($app) {
 		Execute the Query and return JSON
 	*/
 	echo json_encode(Builds::json($params));
+});
+/*
+	
+	Build API Route (http://api.d3up.com/build/{id})
+	
+	This route is used for retrieving a single build by ID.
+	
+	The ID parameter is the 2nd part of the URL and is required.
+	
+*/
+$app->get('/builds/{id}', function($id) use($app) {
+	/*
+		Assemble a generic query parameter that assigns the ID to the query
+	*/
+	$params = array(
+		'conditions' => array(
+			'id' => (int) $id
+		)
+	);
+	/*
+		Execute the Query and return JSON
+	*/
+	echo json_encode(Builds::jsonOne($params));
 });
