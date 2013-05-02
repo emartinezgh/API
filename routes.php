@@ -13,12 +13,12 @@ $app->get('/builds', function() use($app) {
 	/*
 		Default Query
 		
-		The $conditions variable is the query that is being passed to MongoDB
+		The $query variable is the query that is being passed to MongoDB
 
 		Default Values:
 			public = true (Only show public builds)
 	*/
-	$conditions = array(
+	$query = array(
 		'public' => true,			
 	);
 	/*
@@ -34,7 +34,7 @@ $app->get('/builds', function() use($app) {
 			/api/builds?class=monk
 	*/
 	if($class = $app->request->get('class')) {
-		$conditions['class'] = $class;
+		$query['class'] = $class;
 	}
 	/*
 		$_GET['actives'] Param
@@ -47,7 +47,7 @@ $app->get('/builds', function() use($app) {
 			/api/builds?actives=blizzard~c|meteor~e
 	*/
 	if($app->request->get('actives') && $actives = explode("|",$app->request->get('actives'))) {
-		$conditions['actives'] = array('$all' => $actives);
+		$query['actives'] = array('$all' => $actives);
 	}
 	/*
 		Default Sorting Order
@@ -84,7 +84,7 @@ $app->get('/builds', function() use($app) {
 			/api/builds?limit=1
 			/api/builds?limit=50
 	*/
-	$limit = $app->request->get('limit', 'int', 100);
+	$limit = $app->request->get('limit', 'int', 50);
 	/*
 		$_GET['page'] Param
 		
@@ -103,11 +103,11 @@ $app->get('/builds', function() use($app) {
 		Limitations of Input
 		
 		Currently:
-			Limit has to be <= 100
+			Limit has to be <= 50
 			Skip has to be <= 10000
 	*/
-	if($limit > 100) {
-		echo json_encode(['error' => 'The maximum results per request is 100.']);
+	if($limit > 50) {
+		echo json_encode(['error' => 'The maximum results per request is 50.']);
 		exit;
 	}
 	if($skip >= 10000) {
@@ -117,20 +117,23 @@ $app->get('/builds', function() use($app) {
 	/*
 		Finally, assemble all of these variables into $params for passage into the ORM
 	*/
-	$params = array(
-		'conditions' => $conditions,
-		'sort' => $sort,
-		'limit' => 10,
-		'skip' => $skip,
-	);
 	if($app->request->get('explain')) {
 		// Do the explain here, for now, we'll just var_dump the query params
-		echo json_encode($params); exit;
 	}
 	/*
-		Execute the Query and return JSON
+		Execute the Query
 	*/
-	echo json_encode(Builds::json($params));
+	$data = Epic_Mongo::db('build')->find($query)->sort($sort)->limit($limit)->skip($skip);
+	/*
+		Throw an error if we can't find any matches
+	*/
+	if(!$data) {
+		echo json_encode(array('error' => 'Invalid Request')); exit;
+	}
+	/*
+		Render the data as JSON 
+	*/
+	echo json_encode($data->json());
 });
 /*
 	
@@ -143,15 +146,17 @@ $app->get('/builds', function() use($app) {
 */
 $app->get('/builds/{id}', function($id) use($app) {
 	/*
-		Assemble a generic query parameter that assigns the ID to the query
+		Execute the Query
 	*/
-	$params = array(
-		'conditions' => array(
-			'id' => (int) $id
-		)
-	);
+	$data = Epic_Mongo::db('build')->findOne(array("id" => (int) $id));
 	/*
-		Execute the Query and return JSON
+		Throw an error if we can't find the Build
 	*/
-	echo json_encode(Builds::jsonOne($params));
+	if(!$data) {
+		echo json_encode(array('error' => 'Invalid Request')); exit;
+	}
+	/*
+		Render the data as JSON 
+	*/
+	echo json_encode($data->json());
 });
