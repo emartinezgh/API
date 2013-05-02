@@ -24,6 +24,9 @@ $app->notFound(function () use ($app) {
 });
 // Add in our Dependancy Injector
 $app->setDI($di);
+// Set all response types to application/json
+header('Content-type: application/json');
+// Add in our custom routes
 require_once("routes.php");
 // Handle
 $app->handle();
