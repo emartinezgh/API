@@ -15,7 +15,7 @@
 	D3Up.com: http://github.com/D3Up/D3Up.com
 	Epic_Mongo: http://github.com/aaroncox/EpicMongo
 */
-require_once("../bundles/epic_mongo/Mongo.php");
+require_once(__DIR__ . "/../bundles/epic_mongo/Mongo.php");
 /* 
 	Create a Phalcon\Loader to autoload our Models
 */
@@ -24,7 +24,7 @@ $loader = new \Phalcon\Loader();
 	Autoload the Models from the main repository
 */
 $loader->registerDirs(array(
-	'../application/models'
+	__DIR__ . '/../application/models'
 ))->register();
 /*
 	Define a default schema, which is limited to specific models.
