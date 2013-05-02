@@ -19,28 +19,34 @@ class Builds extends Phalcon\Mvc\Collection {
 	
 	public static function json($params) {
 		$data = static::find($params);
-		return array_map(function($doc) {
-			$json = array();
-			foreach(static::$_fieldMap as $idx => $newName) {
-				if(isset($doc->$idx) && $doc->$idx != null) {
-					if($newName) {
-						$json[$newName] = $doc->$idx;																		
-					} else {
-						$json[$idx] = $doc->$idx;						
-					}
-				} else {
-					$json[$newName?:$idx] = null;
-				}
-			}
-			// Haven't figured out how to add this to the fieldMap yet, someday!
-			if(isset($doc->stats['dps'])) {
-				$json['dps'] = $doc->stats['dps'];
-			}
-			if(isset($doc->stats['ehp'])) {
-				$json['ehp'] = $doc->stats['ehp'];
-			}
-			return $json;
-		}, $data);
+		return array_map(array(self, '_filter'), $data);
+	}
+
+	public static function jsonOne($params) {
+		$data = static::findFirst($params);
+		return self::_filter($data);
 	}
 	
+	protected function _filter($doc) {
+		$json = array();
+		foreach(static::$_fieldMap as $idx => $newName) {
+			if(isset($doc->$idx) && $doc->$idx != null) {
+				if($newName) {
+					$json[$newName] = $doc->$idx;																		
+				} else {
+					$json[$idx] = $doc->$idx;						
+				}
+			} else {
+				$json[$newName?:$idx] = null;
+			}
+		}
+		// Haven't figured out how to add this to the fieldMap yet, someday!
+		if(isset($doc->stats['dps'])) {
+			$json['dps'] = $doc->stats['dps'];
+		}
+		if(isset($doc->stats['ehp'])) {
+			$json['ehp'] = $doc->stats['ehp'];
+		}
+		return $json;
+	}
 }
