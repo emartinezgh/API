@@ -3,6 +3,9 @@
 	Setup a MicroMVC app
 */
 $app = new Phalcon\Mvc\Micro();
+
+require_once("jsonp.php");
+
 /*
 	Set all response types to application/json
 */
