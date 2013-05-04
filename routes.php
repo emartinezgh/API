@@ -53,7 +53,9 @@ $app->get('/builds', function() use($app) {
 			/api/builds?class=monk
 	*/
 	if($class = $app->request->get('class')) {
-		$query['class'] = $class;
+		if(in_array($class, array('barbarian', 'monk', 'witch-doctor', 'wizard', 'demon-hunter'))) {
+			$query['class'] = $class;			
+		}
 	}
 	/*
 		$_GET['actives'] Param
