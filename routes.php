@@ -19,7 +19,7 @@ $app->get('/builds', function() use($app) {
 			public = true (Only show public builds)
 	*/
 	$query = array(
-		'public' => true,			
+		// 'public' => true, // TODO - Uncomment this once this flag is available on the live DB.
 	);
 	/*
 		Is this query specific to a user?
