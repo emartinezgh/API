@@ -39,6 +39,7 @@ class Schema extends Epic_Mongo_Schema
 		The typeMap defines quick access to different models
 	*/
 	protected $_typeMap = array(
+		'user' => 'D3Up_user',
 		/*
 			Class Mappings for Builds
 			- 'build' allows access to Epic_Mongo::db('build')
