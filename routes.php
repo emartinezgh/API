@@ -22,6 +22,25 @@ $app->get('/builds', function() use($app) {
 		'public' => true,			
 	);
 	/*
+		Is this query specific to a user?
+	*/
+	if($user_id = $app->request->get('user')) {
+		/*
+			Load the User
+		*/ 
+		$user = Epic_Mongo::db('user')->findOne(array("id" => (int) $user_id));
+		/*
+			Throw an error if we can't find the User
+		*/
+		if(!$user) {
+			echo jsonp_encode(array('error' => 'Invalid User'), $app); exit;
+		}
+		/*
+			Append this user to the Query
+		*/
+		$query['_createdBy'] = $user->createReference();
+	}
+	/*
 		$_GET['class'] Param
 		
 		Specifies a character class to return only specific types
@@ -46,7 +65,13 @@ $app->get('/builds', function() use($app) {
 			/api/builds?actives=blizzard~c
 			/api/builds?actives=blizzard~c|meteor~e
 	*/
-	if($app->request->get('actives') && $actives = explode("|",$app->request->get('actives'))) {
+	if($actives = $app->request->get('actives')) {
+		/*
+			If we didn't recieve an array from the request, explode by | to force an array
+		*/
+		if(!is_array($actives)) {
+			$actives = explode("|", $actives);
+		}
 		$query['actives'] = array('$all' => $actives);
 	}
 	/*
@@ -54,7 +79,9 @@ $app->get('/builds', function() use($app) {
 		
 		The order in which builds will be sorted, by default the sort is an empty array
 	*/
-	$sort = array();
+	$sort = array(
+		'_lastCrawl' => -1
+	);
 	/*
 		$_GET['sort'] Param 
 		
