@@ -34,7 +34,7 @@ class Schema extends Epic_Mongo_Schema
 	/*
 		Which DB or Cluster we should use to connect to
 	*/ 
-	protected $_db = "com_d3up";
+	protected $_db = "com_d3up_staging";
 	/*
 		The typeMap defines quick access to different models
 	*/
