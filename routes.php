@@ -22,6 +22,19 @@ $app->get('/builds', function() use($app) {
 		// 'public' => true, // TODO - Uncomment this once this flag is available on the live DB.
 	);
 	/*
+		Is this query specific to a battletag?
+	*/
+	if($battletag = $app->request->get('battletag')) {
+		/*
+			The Browser application passes battletags in with a dash instead of a hash.
+		*/
+		$battletag = str_replace("-", "#", $battletag);
+		/*
+			Add it to the Query now with it's proper hash
+		*/
+		$query['_characterBt'] = $battletag;
+	}
+	/*
 		Is this query specific to a user?
 	*/
 	if($user_id = $app->request->get('user')) {
@@ -148,9 +161,28 @@ $app->get('/builds', function() use($app) {
 	*/
 	$data = Epic_Mongo::db('build')->find($query)->sort($sort)->limit($limit)->skip($skip);
 	/*
-		Throw an error if we can't find any matches
+		No matches were found in the database!
 	*/
-	if(!$data) {
+	if($app->request->get('battlenet') || !$data || $data->count() == 0) {
+		/*
+			Did we query a battle tag during this failed attemtp?
+		*/
+		if(isset($query['_characterBt'])) {
+			/*
+				Attempting to scan Battle.net for the Battle Tag
+			*/
+			require_once("../application/libraries/D3Up/Sync.php");
+			$sync = new D3Up_Sync();
+			$data = array();
+			foreach(array(1 => 'US', 2 => 'EU', 3 => 'AS') as $key => $region) {
+				$data += $sync->apiGetCharacters($key, $query['_characterBt']);
+			} 
+			echo jsonp_encode($data, $app); exit;
+			
+		}
+		/*
+			Throw an error if we can't find any matches
+		*/
 		echo jsonp_encode(array('error' => 'Invalid Request'), $app); exit;
 	}
 	/*
