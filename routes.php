@@ -161,11 +161,11 @@ $app->get('/builds', function() use($app) {
 	*/
 	$data = Epic_Mongo::db('build')->find($query)->sort($sort)->limit($limit)->skip($skip);
 	/*
-		No matches were found in the database!
+		Are we asking for Battle.net Builds?
 	*/
-	if($app->request->get('battlenet') || !$data || $data->count() == 0) {
+	if($app->request->get('battlenet')) {
 		/*
-			Did we query a battle tag during this failed attemtp?
+			Did we query a battle tag?
 		*/
 		if(isset($query['_characterBt'])) {
 			/*
