@@ -58,6 +58,9 @@ class Schema extends Epic_Mongo_Schema
 		*/
 		'item' => 'D3Up_Item',
 		'cursor:item' => 'D3Up_Mongo_Iterator_Cursor',
+		'gearset' => 'D3Up_GearSet',
+		'gearsetcache' => 'D3Up_GearSet_Cache',
+		
 	);
 }
 /*

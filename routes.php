@@ -226,3 +226,32 @@ $app->get('/builds/{id}', function($id) use($app) {
 	*/
 	echo jsonp_encode($data->json(), $app);
 });
+
+/*
+	
+	Build API Route (http://api.d3up.com/build/{id})
+	
+	This route is used for retrieving a single build by ID.
+	
+	The ID parameter is the 2nd part of the URL and is required.
+	
+*/
+$app->get('/builds/{id}.js', function($id) use($app) {
+	/*
+		Execute the Query
+	*/
+	$data = Epic_Mongo::db('build')->findOne(array("id" => (int) $id));
+	/*
+		Throw an error if we can't find the Build
+	*/
+	if(!$data) {
+		exit;
+	}
+	header('Content-type: text/javascript');
+	/*
+		Render a Javascript File
+	*/
+echo "(function() {
+	d3up.addBuild(".$data->id.", ".json_encode($data->json(true)).");
+})();";
+});
